@@ -189,7 +189,7 @@ class APIView(View):
         """
         authenticators = self.get_authenticators()
         if authenticators:
-            return authenticators[0].authenticate_header(request)
+            return [i.authenticate_header(request) for i in authenticators]
 
     def get_parser_context(self, http_request):
         """
@@ -442,7 +442,7 @@ class APIView(View):
             auth_header = self.get_authenticate_header(self.request)
 
             if auth_header:
-                exc.auth_header = auth_header
+                exc.auth_header = ', '.join(auth_header)
             else:
                 exc.status_code = status.HTTP_403_FORBIDDEN
 
